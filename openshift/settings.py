@@ -42,8 +42,8 @@ SECRET_KEY = uses_keys['SECRET_KEY']
 if 'handlers' in LOGGING and 'logfile' in LOGGING['handlers']:
     LOGGING['handlers']['logfile']['filename'] = LOG_DIR.child('%s.log' % os.environ.get('OPENSHIFT_APP_NAME'))
 
-if MEDIA_ROOT != '':
-    MEDIA_ROOT = DATA_DIR.child('media')
+MEDIA_ROOT = DATA_DIR.child('media')
+STATIC_ROOT = DATA_DIR.child('static')
 
 if 'gunicorn' not in INSTALLED_APPS:
     INSTALLED_APPS += ('gunicorn',)
