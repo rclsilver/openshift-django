@@ -69,3 +69,12 @@ python ${OPENSHIFT_REPO_DIR}manage.py syncdb --noinput
 msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py migrate'"
 python ${OPENSHIFT_REPO_DIR}manage.py migrate
 
+if [ -d ${OPENSHIFT_DATA_DIR}static ]
+then
+	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -c --noinput'"
+	python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -c
+fi
+
+msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput'"
+python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l
+
