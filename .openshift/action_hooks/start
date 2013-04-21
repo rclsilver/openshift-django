@@ -8,6 +8,12 @@ VENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
 VENV_APP_DIR=${VENV_BASE_DIR}${VENV_VERSION}
 
 source ${VENV_APP_DIR}/bin/activate
+
+if [ -f ${OPENSHIFT_DATA_DIR}.bash_profile ]
+then
+	source ${OPENSHIFT_DATA_DIR}.bash_profile
+fi
+
 export DJANGO_SETTINGS_MODULE="openshift.settings"
 
 # gunicorn config
