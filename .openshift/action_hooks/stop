@@ -1,0 +1,14 @@
+#!/bin/bash
+# vim :set ts=4 sw=4 sts=4
+
+set -e
+
+PIDFILE=${OPENSHIFT_DATA_DIR}gunicorn.pid
+
+if [ -f $PIDFILE ]
+then
+	PID=$(cat $PIDFILE)
+	rm $PIDFILE
+	kill -15 $PID
+fi
+
