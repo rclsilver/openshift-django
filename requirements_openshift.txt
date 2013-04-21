@@ -1,0 +1,4 @@
+# Dépendances pour le déploiement dans openshift
+gunicorn==0.17.2
+mysql-python==1.2.4
+
