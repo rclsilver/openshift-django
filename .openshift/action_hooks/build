@@ -17,6 +17,8 @@ CONFIG_DIR=${OPENSHIFT_RUNTIME_DIR}etc/
 TEMPLATE_DIR=${OPENSHIFT_REPO_DIR}.openshift/templates/
 
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_nginx
+source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_virtenv
 
 check_nginx
+check_virtenv
 

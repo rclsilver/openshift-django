@@ -20,40 +20,12 @@ cp ${BUILD_DIR}nginx.conf ${NGINX_DIR}conf/nginx.conf
 
 rm -rf ${BUILD_DIR}
 
-if [ -f ${OPENSHIFT_REPO_DIR}requirements_openshift.txt ]
-then
-	cat ${OPENSHIFT_REPO_DIR}requirements_openshift.txt >> ${OPENSHIFT_REPO_DIR}requirements.txt
-fi
+VIRTENV_VERSION=$(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1)
+VIRTENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
+VIRTENV_APP_DIR=${VIRTENV_BASE_DIR}${VIRTENV_VERSION}
 
-VENV_VERSION=$(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1)
-VENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
-VENV_APP_DIR=${VENV_BASE_DIR}${VENV_VERSION}
-
-if [ ! -d "${VENV_BASE_DIR}" ]
-then
-	mkdir "${VENV_BASE_DIR}"
-fi
-
-if [ -d "${VENV_APP_DIR}" ]
-then
-	msg "Virtualenv '${VENV_APP_DIR}' is up to date!"
-	source ${VENV_APP_DIR}/bin/activate
-else
-	msg "Creating new virtualenv 'VENV_APP_DIR'"
-
-	# remove old virtualenvs
-	rm -rf ${VENV_BASE_DIR}*
-
-	# create new virtualenv
-	virtualenv ${VENV_APP_DIR}
-
-	# activate virtualenv
-	source ${VENV_APP_DIR}/bin/activate
-
-	# install dependencies
-	export PIP_DOWNLOAD_CACHE=${OPENSHIFT_TMP_DIR}.pip/cache
-	pip install --log=${OPENSHIFT_TMP_DIR}.pip/pip.log -r ${OPENSHIFT_REPO_DIR}requirements.txt
-fi
+msg "Chargement de l'environnement '${VIRTENV_APP_DIR}'..."
+source ${VIRTENV_APP_DIR}/bin/activate
 
 # update openshift.settings python module to provide default application settings module name
 pushd ${OPENSHIFT_REPO_DIR} >/dev/null

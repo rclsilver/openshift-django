@@ -1,0 +1,44 @@
+#!/bin/bash
+# vim :set ts=4 sw=4 sts=4
+
+set -e
+
+if [ -f ${OPENSHIFT_REPO_DIR}requirements_openshift.txt ]
+then
+	cat ${OPENSHIFT_REPO_DIR}requirements_openshift.txt >> ${OPENSHIFT_REPO_DIR}requirements.txt
+fi
+
+VIRTENV_VERSION=$(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1)
+VIRTENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
+VIRTENV_APP_DIR=${VIRTENV_BASE_DIR}${VIRTENV_VERSION}
+
+function install_virtenv() {
+	rm -rf ${VIRTENV_BASE_DIR}*
+
+    msg "Création de l'environnement '${VIRTENV_APP_DIR}'..."
+	virtualenv ${VIRTENV_APP_DIR}
+
+    msg "Chargement de l'environnement '${VIRTENV_APP_DIR}'..."
+	source ${VIRTENV_APP_DIR}/bin/activate
+
+    msg "Installation des dépendances de l'application"
+	export PIP_DOWNLOAD_CACHE=${OPENSHIFT_TMP_DIR}.pip/cache
+	pip install --log=${OPENSHIFT_TMP_DIR}.pip/pip.log -r ${OPENSHIFT_REPO_DIR}requirements.txt
+}
+
+function check_virtenv() {
+    if [ ! -d "${VIRTENV_BASE_DIR}" ]
+    then
+        mkdir "${VIRTENV_BASE_DIR}"
+    fi
+
+    if [ -d "${VIRTENV_APP_DIR}" ]
+    then
+        msg "Chargement de l'environnement '${VIRTENV_APP_DIR}'..."
+        source ${VIRTENV_APP_DIR}/bin/activate
+    else
+        msg "L'environnement '${VIRTENV_APP_DIR}' n'existe pas"
+        install_virtenv
+    fi
+}
+
