@@ -3,15 +3,33 @@
 
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
 
-PIDFILE=${OPENSHIFT_RUN_DIR}gunicorn.pid
+msg "Arrêt de nginx..."
+nginx_pid_file=${OPENSHIFT_RUN_DIR}nginx.pid
 
-if [ -f $PIDFILE ]
+if [ -f ${nginx_pid_file} ]
 then
-	PID=$(cat $PIDFILE)
-	rm $PIDFILE
-	kill -15 $PID
+	pid=$(cat ${nginx_pid_file})
+
+	if ps -p ${pid} >/dev/null
+	then
+		kill -15 ${pid}
+	else
+		rm ${nginx_pid_file}
+	fi
 fi
 
-msg "Arrêt de nginx..."
-kill -QUIT $(cat ${OPENSHIFT_RUN_DIR}/nginx.pid)
+msg "Arrêt de gunicorn..."
+gunicorn_pid_file=${OPENSHIFT_RUN_DIR}gunicorn.pid
+
+if [ -f ${gunicorn_pid_file} ]
+then
+	pid=$(cat ${gunicorn_pid_file})
+
+	if ps -p ${pid} >/dev/null
+	then
+		kill -15 ${pid}
+	else
+		rm ${gunicorn_pid_file}
+	fi
+fi
 
