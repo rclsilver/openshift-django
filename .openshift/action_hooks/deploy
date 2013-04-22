@@ -84,10 +84,10 @@ python ${OPENSHIFT_REPO_DIR}manage.py migrate
 
 if [ -d ${OPENSHIFT_DATA_DIR}static ]
 then
-	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -c --noinput'"
-	python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -c --noinput
+	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -cl --noinput'"
+	python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -cl --noinput
+else
+	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput'"
+	python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput
 fi
-
-msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput'"
-python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput
 
