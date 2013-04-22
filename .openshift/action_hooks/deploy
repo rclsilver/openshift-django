@@ -3,9 +3,22 @@
 
 set -e
 
-function msg() {
-	echo "*** $@"
-}
+source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
+
+BUILD_DIR=${OPENSHIFT_TMP_DIR}build/
+NGINX_DIR=${OPENSHIFT_RUNTIME_DIR}nginx/
+TEMPLATE_DIR=${OPENSHIFT_REPO_DIR}.openshift/templates/
+
+umask 027
+
+mkdir -p ${BUILD_DIR}
+
+msg "Création du fichier de configuration pour nginx..."
+cp ${TEMPLATE_DIR}nginx.conf.template ${BUILD_DIR}nginx.conf
+perl -p -i -e 's/\$\{([^}]+)\}/defined $ENV{$1} ? $ENV{$1} : $&/eg' ${BUILD_DIR}nginx.conf
+cp ${BUILD_DIR}nginx.conf ${NGINX_DIR}conf/nginx.conf
+
+rm -rf ${BUILD_DIR}
 
 if [ -f ${OPENSHIFT_REPO_DIR}requirements_openshift.txt ]
 then
