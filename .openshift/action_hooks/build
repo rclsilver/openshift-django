@@ -1,0 +1,22 @@
+
+# vim :set ts=4 sw=4 sts=4
+
+set -e
+
+source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
+
+umask 027
+
+NGINX_VERSION='1.2.6'
+ZLIB_VERSION='1.2.7'
+PCRE_VERSION='8.32'
+
+ROOT_DIR=${OPENSHIFT_RUNTIME_DIR}
+BUILD_DIR=${OPENSHIFT_TMP_DIR}build/
+CONFIG_DIR=${OPENSHIFT_RUNTIME_DIR}etc/
+TEMPLATE_DIR=${OPENSHIFT_REPO_DIR}.openshift/templates/
+
+source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_nginx
+
+check_nginx
+
