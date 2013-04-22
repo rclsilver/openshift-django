@@ -14,7 +14,7 @@ worker_processes 1;
 # This should be > worker_connections
 worker_rlimit_nofile 8192;
 
-error_log ${OPENSHIFT_DIY_LOG_DIR}error.log;
+error_log ${OPENSHIFT_LOG_DIR}error.log;
 pid ${OPENSHIFT_RUN_DIR}nginx.pid;
 
 events {
@@ -43,7 +43,7 @@ http {
 
 	sendfile on;
 	keepalive_timeout 5;
-	access_log ${OPENSHIFT_DIY_LOG_DIR}access.log;
+	access_log ${OPENSHIFT_LOG_DIR}access.log;
 
 	port_in_redirect off;
 	server_tokens off;
