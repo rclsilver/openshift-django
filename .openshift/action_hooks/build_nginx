@@ -1,0 +1,73 @@
+#!/bin/bash
+# vim :set ts=4 sw=4 sts=4
+
+set -e
+
+function install_nginx() {
+	local pkg_nginx=nginx-${NGINX_VERSION}.tar.gz
+	local pkg_pcre=pcre-${PCRE_VERSION}.tar.bz2
+	local pkg_zlib=zlib-${ZLIB_VERSION}.tar.bz2
+
+	mkdir -p ${BUILD_DIR}
+
+	pushd ${BUILD_DIR}
+
+	msg "Téléchargement de pcre ${PCRE_VERSION}..."
+	wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${pkg_pcre}
+
+	msg "Dépacketage de pcre ${PCRE_VERSION}..."
+	tar xjf ${pkg_pcre}
+
+	msg "Téléchargement de zlib ${ZLIB_VERSION}..."
+	wget http://zlib.net/${pkg_zlib}
+
+	msg "Dépacketage de zlib ${PCRE_VERSION}..."
+	tar xfj ${pkg_zlib}
+
+	msg "Téléchargement de nginx ${NGINX_VERSION}..."
+	wget http://nginx.org/download/${pkg_nginx}
+
+	msg "Dépacketage de nginx ${NGINX_VERSION}..."
+	tar xfz ${pkg_nginx}
+
+	pushd nginx-${NGINX_VERSION}
+
+	msg "Configuration de nginx..."
+	./configure \
+		--with-http_ssl_module \
+		--with-http_sub_module \
+		--with-zlib=${BUILD_DIR}/zlib-${ZLIB_VERSION} \
+		--with-pcre=${BUILD_DIR}/pcre-${PCRE_VERSION} \
+		--with-http_ssl_module \
+		--with-http_realip_module \
+		--with-http_gzip_static_module \
+		--prefix=${ROOT_DIR}/nginx
+
+	msg "Compilation de nginx..."
+	make install
+
+	msg "Nettoyage du répertoire de compilation..."
+	popd
+	popd
+	rm -rf ${BUILD_DIR}
+}
+
+function check_nginx() {
+	local nginx_bin=${ROOT_DIR}nginx/sbin/nginx
+
+	if [ ! -e ${nginx_bin} ]
+	then
+		msg "nginx pas installé"
+		install_nginx
+	else
+		local nginx_version=$(${nginx_bin} -v 2>&1 | cut -d/ -f2)
+
+		if [ ${NGINX_VERSION} != ${nginx_version} ]
+		then
+			msg "nginx est installé, mais la version n'est pas la bonne : ${nginx_version} au lieu de ${NGINX_VERSION}"
+			install_nginx
+		else
+			msg "nginx est installé avec la version attendue"
+		fi
+	fi
+}
