@@ -26,7 +26,7 @@ ACCESS_LOGFILE=${OPENSHIFT_DIY_LOG_DIR}gunicorn_access.log
 PIDFILE=${OPENSHIFT_DATA_DIR}gunicorn.pid
 
 # execute gunicorn daemon
-${GUNICORN_BIN} ${OPENSHIFT_RUN_DIR}gunicorn.socket \
+${GUNICORN_BIN} unix:${OPENSHIFT_RUN_DIR}gunicorn.socket \
 	--daemon \
 	--workers=${WORKERS} \
 	--pid=${PIDFILE} \
