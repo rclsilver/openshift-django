@@ -62,7 +62,7 @@ function check_nginx() {
 	else
 		local nginx_version=$(${nginx_bin} -v 2>&1 | cut -d/ -f2)
 
-		if [ ${NGINX_VERSION} != ${nginx_version} ]
+		if [ "${NGINX_VERSION}" != "${nginx_version}" ]
 		then
 			msg "nginx est installé, mais la version n'est pas la bonne : ${nginx_version} au lieu de ${NGINX_VERSION}"
 			install_nginx
