@@ -1,9 +1,9 @@
 #!/bin/bash
 # vim :set ts=4 sw=4 sts=4
 
-set -e
+source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
 
-PIDFILE=${OPENSHIFT_DATA_DIR}gunicorn.pid
+PIDFILE=${OPENSHIFT_RUN_DIR}gunicorn.pid
 
 if [ -f $PIDFILE ]
 then
@@ -11,4 +11,7 @@ then
 	rm $PIDFILE
 	kill -15 $PID
 fi
+
+msg "Arrêt de nginx..."
+kill -QUIT $(cat ${OPENSHIFT_RUN_DIR}/nginx.pid)
 
