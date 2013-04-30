@@ -21,7 +21,7 @@ function install_nginx() {
 	msg "Téléchargement de zlib ${ZLIB_VERSION}..."
 	wget http://zlib.net/${pkg_zlib}
 
-	msg "Dépacketage de zlib ${PCRE_VERSION}..."
+	msg "Dépacketage de zlib ${ZLIB_VERSION}..."
 	tar xfz ${pkg_zlib}
 
 	msg "Téléchargement de nginx ${NGINX_VERSION}..."
