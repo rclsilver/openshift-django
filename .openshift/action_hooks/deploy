@@ -51,7 +51,7 @@ export DJANGO_SETTINGS_MODULE="openshift.settings"
 msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py syncdb --noinput'"
 python ${OPENSHIFT_REPO_DIR}manage.py syncdb --noinput
 
-if python ${OPENSHIFT_REPO_DIR}manage.py | egrep '^ +startapp$' >/dev/null
+if python ${OPENSHIFT_REPO_DIR}manage.py | egrep '^ +migrate$' >/dev/null
 then
 	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py migrate'"
 	python ${OPENSHIFT_REPO_DIR}manage.py migrate
