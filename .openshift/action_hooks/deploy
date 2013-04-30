@@ -68,3 +68,4 @@ fi
 msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput'"
 python ${OPENSHIFT_REPO_DIR}manage.py collectstatic -l --noinput
 
+echo "DEPLOY: OK"

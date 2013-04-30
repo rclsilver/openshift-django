@@ -22,3 +22,4 @@ source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_virtenv
 check_nginx
 check_virtenv
 
+echo "BUILD: OK"
