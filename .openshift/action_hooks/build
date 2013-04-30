@@ -8,7 +8,7 @@ source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
 umask 027
 
 NGINX_VERSION='1.2.6'
-ZLIB_VERSION='1.2.7'
+ZLIB_VERSION='1.2.8'
 PCRE_VERSION='8.32'
 
 ROOT_DIR=${OPENSHIFT_RUNTIME_DIR}
