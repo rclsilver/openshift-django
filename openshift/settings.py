@@ -43,3 +43,7 @@ STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 if 'gunicorn' not in INSTALLED_APPS:
     INSTALLED_APPS += ('gunicorn',)
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+}
