@@ -4,7 +4,7 @@
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
 
 msg "Arrêt de nginx..."
-nginx_pid_file=${OPENSHIFT_RUN_DIR}nginx.pid
+nginx_pid_file=${OPENSHIFT_RUNTIME_DIR}nginx.pid
 
 if [ -f ${nginx_pid_file} ]
 then
@@ -19,7 +19,7 @@ then
 fi
 
 msg "Arrêt de gunicorn..."
-gunicorn_pid_file=${OPENSHIFT_RUN_DIR}gunicorn.pid
+gunicorn_pid_file=${OPENSHIFT_RUNTIME_DIR}gunicorn.pid
 
 if [ -f ${gunicorn_pid_file} ]
 then

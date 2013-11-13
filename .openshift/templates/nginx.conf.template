@@ -15,7 +15,7 @@ worker_processes 1;
 worker_rlimit_nofile 8192;
 
 error_log ${OPENSHIFT_LOG_DIR}error.log;
-pid ${OPENSHIFT_RUN_DIR}nginx.pid;
+pid ${OPENSHIFT_RUNTIME_DIR}nginx.pid;
 
 events {
 	# When you need > 8000 * cpu_cores connections, you start optimizing
@@ -83,7 +83,7 @@ http {
 		# This will listen on all interfaces, you can instead choose a specific IP
 		# such as listen x.x.x.x:80;  Setting listen 80 default_server; will make
 		# this server block the default one if no other blocks match the request
-		listen ${OPENSHIFT_INTERNAL_IP}:${OPENSHIFT_INTERNAL_PORT};
+		listen ${OPENSHIFT_DIY_IP}:${OPENSHIFT_DIY_PORT};
 
 		# Here you can set a server name, you can use wildcards such as *.example.com
 		# however remember if you use server_name *.example.com; You'll only match subdomains
@@ -131,7 +131,7 @@ http {
 			proxy_set_header X-Scheme $scheme;
 			proxy_connect_timeout 10;
 			proxy_read_timeout 10;
-			proxy_pass http://unix:${OPENSHIFT_RUN_DIR}gunicorn.socket;
+			proxy_pass http://unix:${OPENSHIFT_RUNTIME_DIR}gunicorn.socket;
 		}
 
 		location = /robots.txt { access_log off; log_not_found off; }
