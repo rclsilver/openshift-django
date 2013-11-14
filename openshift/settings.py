@@ -43,7 +43,40 @@ STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 if 'gunicorn' not in INSTALLED_APPS:
     INSTALLED_APPS += ('gunicorn',)
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
+try:
+    if 'version' in LOGGING:
+        pass
+except NameError:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {},
+        'handlers': {},
+        'loggers': {},
+    }
+
+if 'formatters' not in LOGGING:
+    LOGGING['formatters'] = {}
+
+LOGGING['formatters']['gunicorn'] = {
+    'format': '%(asctime)s [%(process)s] [%(levelname)s] %(name)s - %(message)s',
+    'datefmt': '%Y-%m-%d %H:%M:%S',
+}
+
+if 'handlers' not in LOGGING:
+    LOGGING['handlers'] = {}
+
+LOGGING['handlers']['gunicorn'] = {
+    'level': 'DEBUG',
+    'class': 'logging.StreamHandler',
+    'formatter': 'gunicorn',
+}
+
+if 'loggers' not in LOGGING:
+    LOGGING['loggers'] = {}
+
+LOGGING['loggers'][''] = {
+    'handlers': ['gunicorn'],
+    'level': 'DEBUG' if DEBUG else 'INFO',
+    'propagate': True,
 }
