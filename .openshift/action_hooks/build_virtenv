@@ -16,7 +16,7 @@ function install_virtenv() {
 	rm -rf ${VIRTENV_BASE_DIR}*
 
     msg "Création de l'environnement '${VIRTENV_APP_DIR}'..."
-	virtualenv ${VIRTENV_APP_DIR}
+	virtualenv ${VIRTENV_APP_DIR} -p ${PYTHON_BIN}
 
     msg "Chargement de l'environnement '${VIRTENV_APP_DIR}'..."
 	source ${VIRTENV_APP_DIR}/bin/activate
