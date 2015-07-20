@@ -16,8 +16,6 @@ BUILD_DIR=${OPENSHIFT_TMP_DIR}build/
 CONFIG_DIR=${OPENSHIFT_RUNTIME_DIR}etc/
 TEMPLATE_DIR=${OPENSHIFT_REPO_DIR}.openshift/templates/
 
-PYTHON_BIN=/usr/bin/python
-
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_nginx
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/build_virtenv
 

@@ -5,7 +5,7 @@ set -e
 
 source ${OPENSHIFT_REPO_DIR}.openshift/action_hooks/common
 
-VENV_VERSION=$(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1)
+VENV_VERSION=$(virtual_env_version)
 VENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
 VENV_APP_DIR=${VENV_BASE_DIR}${VENV_VERSION}
 
@@ -19,19 +19,30 @@ fi
 export DJANGO_SETTINGS_MODULE="openshift.settings"
 
 # gunicorn config
-GUNICORN_BIN="python ${OPENSHIFT_REPO_DIR}manage.py run_gunicorn"
-WORKERS=3
+GUNICORN_BIN="gunicorn"
 LOGFILE=${OPENSHIFT_DIY_LOG_DIR}gunicorn_out.log
 ACCESS_LOGFILE=${OPENSHIFT_DIY_LOG_DIR}gunicorn_access.log
+ERROR_LOGFILE=${OPENSHIFT_DIY_LOG_DIR}gunicorn_error.log
 PIDFILE=${OPENSHIFT_RUNTIME_DIR}gunicorn.pid
 
 # execute gunicorn daemon
-${GUNICORN_BIN} unix:${OPENSHIFT_RUNTIME_DIR}gunicorn.socket \
-	--daemon \
-	--workers=${WORKERS} \
-	--pid=${PIDFILE} \
-	--log-file=${LOGFILE} \
-	--access-logfile ${ACCESS_LOGFILE} \
-	--log-level=info
+pushd ${OPENSHIFT_REPO_DIR} >/dev/null
+WSGI_MODULES=$(find -type f -name 'wsgi.py' | grep -v '/openshift/' | sed -r 's/^\.\///' | sed 's/\.py$//' | sed 's/\//./g')
+RESULT=$(echo "${WSGI_MODULES}" | wc -l | awk '{ print $1 }')
+
+if [ $RESULT -ne 1 ]
+then
+        echo "*** Unable to found the WSGI module: ${RESULT} module(s) found!" >&2
+        exit 1
+fi
+
+WSGI_MODULE=$(echo "${WSGI_MODULES}" | sed -r 's/^\.\///' | sed 's/\.py$//' | sed 's/\//./g')
+
+${GUNICORN_BIN} "${WSGI_MODULE}:application" \
+                --daemon \
+                --bind="unix:${OPENSHIFT_RUNTIME_DIR}gunicorn.socket" \
+                --pid="${PIDFILE}" \
+                --access-logfile="${ACCESS_LOGFILE}" \
+                --error-logfile="${ERROR_LOGFILE}"
 
 ${OPENSHIFT_RUNTIME_DIR}nginx/sbin/nginx

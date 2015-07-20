@@ -20,7 +20,7 @@ cp ${BUILD_DIR}nginx.conf ${NGINX_DIR}conf/nginx.conf
 
 rm -rf ${BUILD_DIR}
 
-VIRTENV_VERSION=$(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1)
+VIRTENV_VERSION=$(virtual_env_version)
 VIRTENV_BASE_DIR=${OPENSHIFT_DATA_DIR}virtualenvs/
 VIRTENV_APP_DIR=${VIRTENV_BASE_DIR}${VIRTENV_VERSION}
 
@@ -48,16 +48,8 @@ popd >/dev/null
 # boot django database setup and static file collection
 export DJANGO_SETTINGS_MODULE="openshift.settings"
 
-msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py syncdb --noinput'"
-python ${OPENSHIFT_REPO_DIR}manage.py syncdb --noinput
-
-if python ${OPENSHIFT_REPO_DIR}manage.py | egrep '^ +migrate$' >/dev/null
-then
-	msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py migrate'"
-	python ${OPENSHIFT_REPO_DIR}manage.py migrate
-else
-	msg "No migration to run (south not loaded)"
-fi
+msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py migrate'"
+python ${OPENSHIFT_REPO_DIR}manage.py migrate
 
 if [ -d ${OPENSHIFT_DATA_DIR}static ]
 then

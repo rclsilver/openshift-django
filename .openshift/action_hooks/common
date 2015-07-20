@@ -7,7 +7,17 @@ function msg() {
 	echo "*** $@"
 }
 
-export OPENSHIFT_RUNTIME_DIR=${OPENSHIFT_HOMEDIR}diy/runtime/
+if [ -d "${OPENSHIFT_HOMEDIR}diy/run/" ]
+then
+	export OPENSHIFT_RUNTIME_DIR=${OPENSHIFT_HOMEDIR}diy/run/
+else
+	export OPENSHIFT_RUNTIME_DIR=${OPENSHIFT_HOMEDIR}diy/runtime/
+fi
+
 export OPENSHIFT_LOG_DIR=${OPENSHIFT_DIY_LOG_DIR}
 export OPENSHIFT_BIN=${OPENSHIFT_RUNTIME_DIR}bin/
+export PYTHON_BIN=/usr/bin/python
 
+virtual_env_version() {
+	echo $(md5sum ${OPENSHIFT_REPO_DIR}requirements.txt | cut -d ' ' -f1) $(echo -n "$PYTHON_BIN" | md5sum | cut -d ' ' -f1) | md5sum | cut -d ' ' -f1
+}
