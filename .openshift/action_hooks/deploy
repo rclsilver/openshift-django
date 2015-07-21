@@ -48,6 +48,10 @@ popd >/dev/null
 # boot django database setup and static file collection
 export DJANGO_SETTINGS_MODULE="openshift.settings"
 
+# http://dev.mysql.com/doc/refman/5.6/en/mysql-tzinfo-to-sql.html
+msg "Loading the time zone tables in MySQL database"
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
+
 msg "Executing 'python ${OPENSHIFT_REPO_DIR}manage.py migrate'"
 python ${OPENSHIFT_REPO_DIR}manage.py migrate
 
